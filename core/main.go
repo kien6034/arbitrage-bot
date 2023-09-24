@@ -25,7 +25,8 @@ import (
 	"log"
 	"time"
 
-	pb "github.com/kien6034/arbitrage-bot/core/proto/random"
+	pb "core/proto"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -35,7 +36,7 @@ const (
 )
 
 var (
-	addr = flag.String("addr", "localhost:50051", "the address to connect to")
+	addr = flag.String("addr", "localhost:8082", "the address to connect to")
 	name = flag.String("name", defaultName, "Name to greet")
 )
 
@@ -47,12 +48,12 @@ func main() {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
-	c := pb.NewGreeterClient(conn)
+	c := pb.NewRandomClient(conn)
 
 	// Contact the server and print out its response.
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.SayHelloAgain(ctx, &pb.HelloRequest{Name: *name})
+	r, err := c.PingPong(ctx, &pb.PingRequest{Message: "hello"})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
