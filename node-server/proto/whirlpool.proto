@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package whirlpool;
+
+service GetPrice {
+    rpc GetPrice(GetPriceRequest) returns (GetPriceResponse) {};
+}
+
+message GetPriceRequest {
+    string message = 1;
+}
+
+message GetPriceResponse {
+    string message = 1;
+}

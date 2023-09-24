@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package whirlpool;
+option go_package = "github.com/kien6034/arbitrage-bot/whirlpool";
+
+service Whirlpool {
+    rpc GetPrice(GetPriceRequest) returns (GetPriceResponse) {};
+}
+
+message GetPriceRequest {
+    string message = 1;
+}
+
+message GetPriceResponse {
+    string message = 1;
+}
