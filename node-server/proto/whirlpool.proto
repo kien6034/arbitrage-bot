@@ -2,8 +2,10 @@ syntax = "proto3";
 
 package whirlpool;
 
-service GetPrice {
+service Whirlpool {
     rpc GetPrice(GetPriceRequest) returns (GetPriceResponse) {};
+    rpc GetPair(GetPairRequest) returns (GetPairResponse) {};
+    rpc GetPool(GetPoolRequest) returns (GetPoolResponse) {};
 }
 
 message GetPriceRequest {
@@ -12,4 +14,21 @@ message GetPriceRequest {
 
 message GetPriceResponse {
     string message = 1;
+}
+
+message GetPairRequest {
+    string token0 = 1;
+    string token1 = 2;
+}
+
+message GetPairResponse {
+    string message = 1;
+}
+
+message GetPoolRequest {
+    string poolAddr = 1;
+}
+
+message GetPoolResponse {
+    int32 fee = 1;
 }

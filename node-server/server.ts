@@ -4,7 +4,8 @@ import * as protoLoader from "@grpc/proto-loader";
 import { ProtoGrpcType } from "./proto/random";
 import { RandomHandlers } from "./proto/randomPackage/Random";
 import { ProtoGrpcType as WhirlpoolProtoGrpcType } from "./proto/whirlpool";
-import { GetPriceHandlers } from "./proto/whirlpool/GetPrice";
+import { WhirlpoolHandlers } from "./proto/whirlpool/Whirlpool";
+import { Whirlpool } from "./services/whirlpool/whirlpool";
 
 const PORT = 8082;
 const PROTO_FILE = "./proto/random.proto";
@@ -51,12 +52,25 @@ function getServer() {
     },
   } as RandomHandlers);
 
-  server.addService(whirlpoolPackage.GetPrice.service, {
+  server.addService(whirlpoolPackage.Whirlpool.service, {
     GetPrice: (req, res) => {
       console.log(req.request);
       res(null, { message: "Getting price" });
     },
-  } as GetPriceHandlers);
+    GetPool: async (req, res) => {
+      let wp = new Whirlpool();
+      if (!req.request.poolAddr) {
+        res(null, { fee: 0 });
+        return;
+      }
+      let data = await wp.getPoolInfo(req.request.poolAddr);
+      res(null, { fee: data.defaultFeeRate });
+    },
+    GetPair: (req, res) => {
+      console.log(req.request);
+      res(null, { message: "Getting pair" });
+    },
+  } as WhirlpoolHandlers);
 
   return server;
 }
