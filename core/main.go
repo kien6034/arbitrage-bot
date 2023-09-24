@@ -32,11 +32,11 @@ func main() {
 	c := whirlpool.NewWhirlpoolClient(conn)
 
 	// Contact the server and print out its response.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
-	r, err := c.GetPrice(ctx, &whirlpool.GetPriceRequest{Message: "hello"})
+	r, err := c.GetPool(ctx, &whirlpool.GetPoolRequest{PoolAddr: "FRAztCuGoRXv71VTMxaKE2DVRMN8EFKDkR9jXE2jY9jd"})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
-	log.Printf("Greeting: %s", r.GetMessage())
+	log.Printf("Data: %d", r.Fee)
 }

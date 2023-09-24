@@ -64,7 +64,8 @@ function getServer() {
         return;
       }
       let data = await wp.getPoolInfo(req.request.poolAddr);
-      res(null, { fee: data.defaultFeeRate });
+      console.log("data:", data);
+      res(null, { fee: data.defaultProtocolFeeRate });
     },
     GetPair: (req, res) => {
       console.log(req.request);

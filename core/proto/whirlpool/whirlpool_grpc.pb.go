@@ -23,6 +23,8 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type WhirlpoolClient interface {
 	GetPrice(ctx context.Context, in *GetPriceRequest, opts ...grpc.CallOption) (*GetPriceResponse, error)
+	GetPair(ctx context.Context, in *GetPairRequest, opts ...grpc.CallOption) (*GetPairResponse, error)
+	GetPool(ctx context.Context, in *GetPoolRequest, opts ...grpc.CallOption) (*GetPoolResponse, error)
 }
 
 type whirlpoolClient struct {
@@ -42,11 +44,31 @@ func (c *whirlpoolClient) GetPrice(ctx context.Context, in *GetPriceRequest, opt
 	return out, nil
 }
 
+func (c *whirlpoolClient) GetPair(ctx context.Context, in *GetPairRequest, opts ...grpc.CallOption) (*GetPairResponse, error) {
+	out := new(GetPairResponse)
+	err := c.cc.Invoke(ctx, "/whirlpool.Whirlpool/GetPair", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *whirlpoolClient) GetPool(ctx context.Context, in *GetPoolRequest, opts ...grpc.CallOption) (*GetPoolResponse, error) {
+	out := new(GetPoolResponse)
+	err := c.cc.Invoke(ctx, "/whirlpool.Whirlpool/GetPool", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // WhirlpoolServer is the server API for Whirlpool service.
 // All implementations must embed UnimplementedWhirlpoolServer
 // for forward compatibility
 type WhirlpoolServer interface {
 	GetPrice(context.Context, *GetPriceRequest) (*GetPriceResponse, error)
+	GetPair(context.Context, *GetPairRequest) (*GetPairResponse, error)
+	GetPool(context.Context, *GetPoolRequest) (*GetPoolResponse, error)
 	mustEmbedUnimplementedWhirlpoolServer()
 }
 
@@ -56,6 +78,12 @@ type UnimplementedWhirlpoolServer struct {
 
 func (UnimplementedWhirlpoolServer) GetPrice(context.Context, *GetPriceRequest) (*GetPriceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPrice not implemented")
+}
+func (UnimplementedWhirlpoolServer) GetPair(context.Context, *GetPairRequest) (*GetPairResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPair not implemented")
+}
+func (UnimplementedWhirlpoolServer) GetPool(context.Context, *GetPoolRequest) (*GetPoolResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPool not implemented")
 }
 func (UnimplementedWhirlpoolServer) mustEmbedUnimplementedWhirlpoolServer() {}
 
@@ -88,6 +116,42 @@ func _Whirlpool_GetPrice_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Whirlpool_GetPair_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPairRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WhirlpoolServer).GetPair(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/whirlpool.Whirlpool/GetPair",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WhirlpoolServer).GetPair(ctx, req.(*GetPairRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Whirlpool_GetPool_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPoolRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WhirlpoolServer).GetPool(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/whirlpool.Whirlpool/GetPool",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WhirlpoolServer).GetPool(ctx, req.(*GetPoolRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Whirlpool_ServiceDesc is the grpc.ServiceDesc for Whirlpool service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -98,6 +162,14 @@ var Whirlpool_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetPrice",
 			Handler:    _Whirlpool_GetPrice_Handler,
+		},
+		{
+			MethodName: "GetPair",
+			Handler:    _Whirlpool_GetPair_Handler,
+		},
+		{
+			MethodName: "GetPool",
+			Handler:    _Whirlpool_GetPool_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

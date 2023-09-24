@@ -1,6 +1,7 @@
 import { AnchorProvider, Wallet } from "@project-serum/anchor";
 import { WhirlpoolContext } from "@renec-foundation/redex-sdk";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import path from "path";
 
 export const loadProvider = function (payerKeypair: Keypair) {
   const wallets = loadWallets();
@@ -28,8 +29,12 @@ export type NemoswapAccounts = {
 export const loadWallets = function (): NemoswapAccounts {
   let userKeypair: Keypair | undefined = undefined;
 
+  const relativePath = ".wallets/user_wallet.json";
+  const absolutePath = path.join(__dirname, relativePath);
+
+  console.log(absolutePath);
   try {
-    const userWallet = require("../../.wallets/user_wallet.json");
+    const userWallet = require(absolutePath);
     userKeypair = Keypair.fromSecretKey(Uint8Array.from(userWallet));
   } catch {}
 
