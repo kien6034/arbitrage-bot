@@ -3,10 +3,12 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"log"
 	"time"
 
-	whirlpool "core/proto/whirlpool"
+	api "github.com/kien6034/arbitrage-bot/api-service/common"
+	whirlpool "github.com/kien6034/arbitrage-bot/core/proto/whirlpool"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -22,6 +24,8 @@ var (
 )
 
 func main() {
+
+	fmt.Println("hello %d", api.KeyExpireTime)
 	flag.Parse()
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))

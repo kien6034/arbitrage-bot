@@ -1,6 +1,6 @@
-module core
+module github.com/kien6034/arbitrage-bot/core
 
-go 1.21
+go 1.21.1
 
 require (
 	google.golang.org/grpc v1.58.2
