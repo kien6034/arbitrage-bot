@@ -1,0 +1,33 @@
+.
+├── core
+│   ├── main.go
+│   └── proto
+│       ├── proto-gen.sh
+│       └── whirlpool
+│           ├── whirlpool.pb.go
+│           ├── whirlpool.proto
+│           └── whirlpool_grpc.pb.go
+├── node-server
+│   ├── package.json
+│   ├── proto
+│   │   ├── whirlpool
+│   │   │   ├── GetPairRequest.ts
+│   │   │   ├── GetPairResponse.ts
+│   │   │   ├── GetPoolRequest.ts
+│   │   │   ├── GetPoolResponse.ts
+│   │   │   ├── GetPriceRequest.ts
+│   │   │   ├── GetPriceResponse.ts
+│   │   │   └── Whirlpool.ts
+│   │   ├── whirlpool.proto
+│   │   └── whirlpool.ts
+│   ├── proto-gen.sh
+│   ├── server.ts
+│   ├── services
+│   │   └── whirlpool
+│   │       ├── provider.ts
+│   │       └── whirlpool.ts
+│   └── yarn.lock
+├── output.txt
+└── tree.sh
+
+9 directories, 22 files
