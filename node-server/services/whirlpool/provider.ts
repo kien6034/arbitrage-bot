@@ -2,17 +2,24 @@ import { AnchorProvider, Wallet } from "@project-serum/anchor";
 import { WhirlpoolContext } from "@renec-foundation/redex-sdk";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import path from "path";
+import { env } from "./env";
+
+export const loadConfig = () => {
+  require("dotenv").config();
+  const isTestnet = process.env.TESTNET === "1";
+  const config = isTestnet ? env.TESTNET : env.MAINNET;
+  return config;
+};
 
 export const loadProvider = function (payerKeypair: Keypair) {
+  const config = loadConfig();
   const wallets = loadWallets();
-  const connection = new Connection(
-    "https://api-testnet.renec.foundation:8899/"
-  );
+  const connection = new Connection(config.RPC);
   const wallet = new Wallet(payerKeypair);
   const provider = new AnchorProvider(connection, wallet, {});
   const ctx = WhirlpoolContext.withProvider(
     provider,
-    new PublicKey("4ERwQLtitCdCvSqjzrrVUTeZNfisLNuo3J8HVrbo6mn6")
+    new PublicKey(config.PROGRAM_ID)
   );
 
   return {
@@ -32,7 +39,6 @@ export const loadWallets = function (): NemoswapAccounts {
   const relativePath = ".wallets/user_wallet.json";
   const absolutePath = path.join(__dirname, relativePath);
 
-  console.log(absolutePath);
   try {
     const userWallet = require(absolutePath);
     userKeypair = Keypair.fromSecretKey(Uint8Array.from(userWallet));

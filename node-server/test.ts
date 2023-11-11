@@ -37,25 +37,19 @@ function main() {
 function getServer() {
   const server = new grpc.Server();
 
-  // Setup whirlpool-server
-  const whirlpool = new Whirlpool();
-
   server.addService(whirlpoolPackage.Whirlpool.service, {
     GetPrice: (req, res) => {
       console.log(req.request);
       res(null, { message: "Getting price" });
     },
     GetPool: async (req, res) => {
-      const startTime = process.hrtime();
-
+      let wp = new Whirlpool();
       if (!req.request.poolAddr) {
         res(null, { fee: 0 });
         return;
       }
-      let data = await whirlpool.getPoolInfo(req.request.poolAddr);
+      let data = await wp.getPoolInfo(req.request.poolAddr);
       console.log("data:", data);
-      // Calculate elapsed time
-      const [seconds, nanoseconds] = process.hrtime(startTime);
       res(null, { fee: data.defaultProtocolFeeRate });
     },
     GetPair: (req, res) => {

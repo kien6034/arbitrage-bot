@@ -3,11 +3,9 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 	"log"
 	"time"
 
-	api "github.com/kien6034/arbitrage-bot/api-service/common"
 	whirlpool "github.com/kien6034/arbitrage-bot/core/proto/whirlpool"
 
 	"google.golang.org/grpc"
@@ -24,8 +22,6 @@ var (
 )
 
 func main() {
-
-	fmt.Println("hello %d", api.KeyExpireTime)
 	flag.Parse()
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
@@ -38,9 +34,18 @@ func main() {
 	// Contact the server and print out its response.
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
+
+	// Start timing
+	startTime := time.Now()
+
 	r, err := c.GetPool(ctx, &whirlpool.GetPoolRequest{PoolAddr: "FRAztCuGoRXv71VTMxaKE2DVRMN8EFKDkR9jXE2jY9jd"})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
+
+	// Calculate elapsed time
+	elapsedTime := time.Since(startTime)
+
 	log.Printf("Data: %d", r.Fee)
+	log.Printf("Request took: %s", elapsedTime)
 }
