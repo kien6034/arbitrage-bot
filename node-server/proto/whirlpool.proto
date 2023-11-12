@@ -1,6 +1,9 @@
 syntax = "proto3";
 
 package whirlpool;
+option go_package = "./whirlpool;whirlpool";
+
+
 
 service Whirlpool {
     rpc GetPrice(GetPriceRequest) returns (GetPriceResponse) {};

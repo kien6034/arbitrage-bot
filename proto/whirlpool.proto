@@ -1,7 +1,8 @@
 syntax = "proto3";
 
 package whirlpool;
-option go_package = "github.com/kien6034/arbitrage-bot/whirlpool";
+option go_package = "./whirlpool;whirlpool";
+
 
 
 service Whirlpool {

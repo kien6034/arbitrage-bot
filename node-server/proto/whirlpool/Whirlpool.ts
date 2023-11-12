@@ -1,4 +1,4 @@
-// Original file: proto/whirlpool.proto
+// Original file: /Users/kien6034/bot/arbitrage-bot/proto/whirlpool.proto
 
 import type * as grpc from '@grpc/grpc-js'
 import type { MethodDefinition } from '@grpc/proto-loader'

@@ -27,11 +27,18 @@
 │   ├── server.ts
 │   ├── services
 │   │   └── whirlpool
+│   │       ├── env.ts
 │   │       ├── provider.ts
+│   │       ├── types.ts
+│   │       ├── utils
+│   │       │   └── index.ts
 │   │       └── whirlpool.ts
 │   ├── test.ts
 │   └── yarn.lock
 ├── output.txt
+├── proto
+│   └── whirlpool.proto
+├── proto-gen.sh
 └── tree.sh
 
-9 directories, 26 files
+11 directories, 31 files
