@@ -10,7 +10,6 @@ import {
 } from "@renec-foundation/redex-sdk";
 import { DecimalUtil, Instruction, Percentage } from "@orca-so/common-sdk";
 import { Decimal } from "decimal.js";
-import { GetPriceRequest__Output } from "../../proto/whirlpool/GetPriceRequest";
 import { GetPriceResponse__Output } from "../../proto/whirlpool/GetPriceResponse";
 import { getSwapToken } from "./utils";
 

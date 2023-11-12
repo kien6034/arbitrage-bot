@@ -3,14 +3,18 @@
 ├── core
 │   ├── main.go
 │   └── proto
-│       ├── proto-gen.sh
 │       └── whirlpool
 │           ├── whirlpool.pb.go
-│           ├── whirlpool.proto
 │           └── whirlpool_grpc.pb.go
 ├── go.work
 ├── go.work.sum
 ├── node-server
+│   ├── common
+│   │   ├── config.ts
+│   │   ├── index.ts
+│   │   └── proto.ts
+│   ├── grpc
+│   │   └── gprcServer.ts
 │   ├── package.json
 │   ├── proto
 │   │   ├── whirlpool
@@ -23,7 +27,6 @@
 │   │   │   └── Whirlpool.ts
 │   │   ├── whirlpool.proto
 │   │   └── whirlpool.ts
-│   ├── proto-gen.sh
 │   ├── server.ts
 │   ├── services
 │   │   └── whirlpool
@@ -33,12 +36,11 @@
 │   │       ├── utils
 │   │       │   └── index.ts
 │   │       └── whirlpool.ts
-│   ├── test.ts
 │   └── yarn.lock
-├── output.txt
 ├── proto
 │   └── whirlpool.proto
 ├── proto-gen.sh
-└── tree.sh
+├── tree.sh
+└── tree.txt
 
-11 directories, 31 files
+13 directories, 31 files
