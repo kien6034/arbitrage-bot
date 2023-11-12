@@ -53,8 +53,11 @@ function getServer() {
         return;
       }
 
-      await whirlpool.getPrice(req.request.tokenA, req.request.tokenB);
-      res(null, { message: "Getting price" });
+      const getPriceRes = await whirlpool.getPrice(
+        req.request.tokenA,
+        req.request.tokenB
+      );
+      res(null, getPriceRes);
     },
     GetPool: async (req, res) => {
       const startTime = process.hrtime();

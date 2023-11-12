@@ -3,8 +3,6 @@ syntax = "proto3";
 package whirlpool;
 option go_package = "./whirlpool;whirlpool";
 
-
-
 service Whirlpool {
     rpc GetPrice(GetPriceRequest) returns (GetPriceResponse) {};
     rpc GetPair(GetPairRequest) returns (GetPairResponse) {};
@@ -17,7 +15,7 @@ message GetPriceRequest {
 }
 
 message GetPriceResponse {
-    string message = 1;
+    float price = 1;
 }
 
 message GetPairRequest {

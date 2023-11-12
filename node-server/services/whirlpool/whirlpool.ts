@@ -10,6 +10,11 @@ import {
 } from "@renec-foundation/redex-sdk";
 import { DecimalUtil, Instruction, Percentage } from "@orca-so/common-sdk";
 import { Decimal } from "decimal.js";
+import { GetPriceRequest__Output } from "../../proto/whirlpool/GetPriceRequest";
+import { GetPriceResponse__Output } from "../../proto/whirlpool/GetPriceResponse";
+import { getSwapToken } from "./utils";
+
+const SLIPPAGE = Percentage.fromFraction(1, 100);
 
 export class Whirlpool {
   private client: WhirlpoolClient;
@@ -43,7 +48,10 @@ export class Whirlpool {
     return configAccount;
   }
 
-  async getPrice(tokenA: string, tokenB: string) {
+  async getPrice(
+    tokenA: string,
+    tokenB: string
+  ): Promise<GetPriceResponse__Output> {
     const correctTokenOrder = PoolUtil.orderMints(tokenA, tokenB);
 
     try {
@@ -55,32 +63,32 @@ export class Whirlpool {
         32
       );
 
-      console.log(
-        "program id: ",
-        this.client.getContext().program.programId.toBase58()
-      );
-      console.log("config pubkey: ", this.configPubkey.toBase58());
-      console.log("Whirlpool PDA: ", whirlpoolPDA.publicKey.toBase58());
-      console.log("Token A: ", correctTokenOrder[0]);
-      console.log("Token B: ", correctTokenOrder[1]);
-
       const whirlpool = await this.client.getPool(whirlpoolPDA.publicKey);
-      const SLIPPAGE = Percentage.fromFraction(1, 100);
 
-      const tokenAInfo = whirlpool.getTokenAInfo();
+      const { input, output } = getSwapToken(whirlpool, tokenA);
+
       const quote = await swapQuoteByInputToken(
         whirlpool,
-        tokenA,
-        DecimalUtil.toU64(new Decimal(1), tokenAInfo.decimals),
+        input.mint,
+        DecimalUtil.toU64(new Decimal(1), input.decimals),
         SLIPPAGE,
         this.client.getContext().program.programId,
         this.client.getFetcher(),
         true
       );
 
-      console.log("Quote: ", quote);
+      const price = DecimalUtil.fromU64(
+        quote.estimatedAmountOut,
+        output.decimals
+      );
+
+      return {
+        price: price.toNumber(),
+      };
     } catch (error) {
       console.log(error);
+
+      return {};
     }
   }
 }

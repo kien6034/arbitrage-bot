@@ -2,9 +2,9 @@
 
 
 export interface GetPriceResponse {
-  'message'?: (string);
+  'price'?: (number | string);
 }
 
 export interface GetPriceResponse__Output {
-  'message'?: (string);
+  'price'?: (number);
 }
