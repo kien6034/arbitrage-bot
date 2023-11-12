@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v4.24.3
-// source: whirlpool/whirlpool.proto
+// source: proto/whirlpool/whirlpool.proto
 
 package whirlpool
 
@@ -173,5 +173,5 @@ var Whirlpool_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "whirlpool/whirlpool.proto",
+	Metadata: "proto/whirlpool/whirlpool.proto",
 }

@@ -11,7 +11,8 @@ service Whirlpool {
 }
 
 message GetPriceRequest {
-    string message = 1;
+    string tokenA = 1;
+    string tokenB = 2;
 }
 
 message GetPriceResponse {

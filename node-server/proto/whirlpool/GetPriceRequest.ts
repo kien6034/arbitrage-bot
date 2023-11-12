@@ -2,9 +2,11 @@
 
 
 export interface GetPriceRequest {
-  'message'?: (string);
+  'tokenA'?: (string);
+  'tokenB'?: (string);
 }
 
 export interface GetPriceRequest__Output {
-  'message'?: (string);
+  'tokenA'?: (string);
+  'tokenB'?: (string);
 }

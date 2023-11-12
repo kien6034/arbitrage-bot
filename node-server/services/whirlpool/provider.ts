@@ -26,6 +26,7 @@ export const loadProvider = function (payerKeypair: Keypair) {
     provider,
     ctx,
     wallets,
+    config,
   };
 };
 

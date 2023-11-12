@@ -41,8 +41,19 @@ function getServer() {
   const whirlpool = new Whirlpool();
 
   server.addService(whirlpoolPackage.Whirlpool.service, {
-    GetPrice: (req, res) => {
+    GetPrice: async (req, res) => {
       console.log(req.request);
+
+      if (!req.request.tokenA || !req.request.tokenB) {
+        // Handle error, maybe by sending a gRPC error response
+        res({
+          code: grpc.status.INVALID_ARGUMENT,
+          message: "tokenA and tokenB are required.",
+        });
+        return;
+      }
+
+      await whirlpool.getPrice(req.request.tokenA, req.request.tokenB);
       res(null, { message: "Getting price" });
     },
     GetPool: async (req, res) => {
