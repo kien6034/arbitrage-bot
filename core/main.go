@@ -38,7 +38,7 @@ func main() {
 	// Start timing
 	startTime := time.Now()
 
-	r, err := c.GetPrice(ctx, &whirlpool.GetPriceRequest{TokenA: "So11111111111111111111111111111111111111112", TokenB: "Afy8qEgeJykFziRwiCk6tnBbd3uzxMoEqn2GTNCyGN7P"})
+	r, err := c.GetPrice(ctx, &whirlpool.GetPriceRequest{TokenA: "Afy8qEgeJykFziRwiCk6tnBbd3uzxMoEqn2GTNCyGN7P", TokenB: "So11111111111111111111111111111111111112112"})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
@@ -46,6 +46,6 @@ func main() {
 	// Calculate elapsed time
 	elapsedTime := time.Since(startTime)
 
-	log.Printf("Data: %d", r)
+	log.Printf("Data: %f", r.Price)
 	log.Printf("Request took: %s", elapsedTime)
 }

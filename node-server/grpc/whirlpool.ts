@@ -28,7 +28,13 @@ export const getWhirlpoolService = () => {
         req.request.tokenA,
         req.request.tokenB
       );
-      res(null, getPriceRes);
+
+      if (getPriceRes.success) {
+        res(null, getPriceRes.result);
+      } else {
+        res(getPriceRes.error);
+      }
+      return;
     },
     GetPool: async (req, res) => {
       const startTime = process.hrtime();

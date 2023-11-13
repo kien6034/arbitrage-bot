@@ -14,7 +14,7 @@
 │   │   ├── index.ts
 │   │   └── proto.ts
 │   ├── grpc
-│   │   └── gprcServer.ts
+│   │   └── whirlpool.ts
 │   ├── package.json
 │   ├── proto
 │   │   ├── whirlpool
