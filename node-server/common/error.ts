@@ -1,4 +1,5 @@
 import { ServerErrorResponse } from "@grpc/grpc-js";
+import { Status } from "@grpc/grpc-js/build/src/constants";
 
 export function ensureError(value: unknown): Error {
   if (value instanceof Error) return value;
@@ -18,13 +19,17 @@ export function Ok<T>(result: T): { success: true; result: T } {
   return { success: true, result };
 }
 
-export function Err(error: Error): {
+export function Err(
+  error: Error,
+  code?: Status
+): {
   success: false;
   error: ServerErrorResponse;
 } {
   return {
     success: false,
     error: {
+      code: code ?? Status.UNKNOWN,
       name: error.name,
       message: error.message,
     },

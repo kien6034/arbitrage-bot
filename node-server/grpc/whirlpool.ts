@@ -29,6 +29,7 @@ export const getWhirlpoolService = () => {
         req.request.tokenB
       );
 
+      console.log("res: ", getPriceRes);
       if (getPriceRes.success) {
         res(null, getPriceRes.result);
       } else {

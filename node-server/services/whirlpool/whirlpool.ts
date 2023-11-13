@@ -8,7 +8,7 @@ import {
   buildWhirlpoolClient,
   swapQuoteByInputToken,
 } from "@renec-foundation/redex-sdk";
-import { DecimalUtil, Instruction, Percentage } from "@orca-so/common-sdk";
+import { DecimalUtil, Percentage } from "@orca-so/common-sdk";
 import { Decimal } from "decimal.js";
 import { GetPriceResponse__Output } from "../../proto/whirlpool/GetPriceResponse";
 import { getSwapToken } from "./utils";
@@ -54,45 +54,43 @@ export class Whirlpool {
     tokenA: string,
     tokenB: string
   ): Promise<GrpcResult<GetPriceResponse__Output, ServerErrorResponse>> {
-    {
+    try {
       const correctTokenOrder = PoolUtil.orderMints(tokenA, tokenB);
 
-      try {
-        const whirlpoolPDA = PDAUtil.getWhirlpool(
-          this.client.getContext().program.programId,
-          this.configPubkey,
-          new PublicKey(correctTokenOrder[0]),
-          new PublicKey(correctTokenOrder[1]),
-          32
-        );
+      const whirlpoolPDA = PDAUtil.getWhirlpool(
+        this.client.getContext().program.programId,
+        this.configPubkey,
+        new PublicKey(correctTokenOrder[0]),
+        new PublicKey(correctTokenOrder[1]),
+        32
+      );
 
-        const whirlpool = await this.client.getPool(whirlpoolPDA.publicKey);
+      const whirlpool = await this.client.getPool(whirlpoolPDA.publicKey);
 
-        const { input, output } = getSwapToken(whirlpool, tokenA);
+      const { input, output } = getSwapToken(whirlpool, tokenA);
 
-        const quote = await swapQuoteByInputToken(
-          whirlpool,
-          input.mint,
-          DecimalUtil.toU64(new Decimal(1), input.decimals),
-          SLIPPAGE,
-          this.client.getContext().program.programId,
-          this.client.getFetcher(),
-          true
-        );
+      const quote = await swapQuoteByInputToken(
+        whirlpool,
+        input.mint,
+        DecimalUtil.toU64(new Decimal(1), input.decimals),
+        SLIPPAGE,
+        this.client.getContext().program.programId,
+        this.client.getFetcher(),
+        true
+      );
 
-        const price = DecimalUtil.fromU64(
-          quote.estimatedAmountOut,
-          output.decimals
-        );
+      const price = DecimalUtil.fromU64(
+        quote.estimatedAmountOut,
+        output.decimals
+      );
 
-        return Ok({
-          price: price.toNumber(),
-        });
-      } catch (e) {
-        const error = ensureError(eval);
+      return Ok({
+        price: price.toNumber(),
+      });
+    } catch (e) {
+      const error = ensureError(e);
 
-        return Err(error);
-      }
+      return Err(error, Status.INTERNAL);
     }
   }
 }
