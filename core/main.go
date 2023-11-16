@@ -31,21 +31,40 @@ func main() {
 	defer conn.Close()
 	c := whirlpool.NewWhirlpoolClient(conn)
 
-	// Contact the server and print out its response.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
-	defer cancel()
-
 	// Start timing
 	startTime := time.Now()
 
-	r, err := c.GetPrice(ctx, &whirlpool.GetPriceRequest{TokenA: "Afy8qEgeJykFziRwiCk6tnBbd3uzxMoEqn2GTNCyGN7P", TokenB: "So11111111111111111111111111111111111111112"})
-	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+	respChan := make(chan *whirlpool.GetPriceResponse)
+	errChan := make(chan error)
+
+	// Start two concurrent requests
+	go makeRequest(c, "Afy8qEgeJykFziRwiCk6tnBbd3uzxMoEqn2GTNCyGN7P", "So11111111111111111111111111111111111111112", respChan, errChan)
+	go makeRequest(c, "Afy8qEgeJykFziRwiCk6tnBbd3uzxMoEqn2GTNCyGN7P", "So11111111111111111111111111111111111111112", respChan, errChan)
+
+	// Wait for responses
+	for i := 0; i < 2; i++ {
+		select {
+		case resp := <-respChan:
+			log.Printf("Data: %f", resp.Price)
+		case err := <-errChan:
+			log.Printf("Error: %v", err)
+		}
 	}
 
 	// Calculate elapsed time
 	elapsedTime := time.Since(startTime)
 
-	log.Printf("Data: %f", r.Price)
 	log.Printf("Request took: %s", elapsedTime)
+}
+
+func makeRequest(client whirlpool.WhirlpoolClient, tokenA, tokenB string, respChan chan<- *whirlpool.GetPriceResponse, errChan chan<- error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+
+	resp, err := client.GetPrice(ctx, &whirlpool.GetPriceRequest{TokenA: tokenA, TokenB: tokenB})
+	if err != nil {
+		errChan <- err
+		return
+	}
+	respChan <- resp
 }

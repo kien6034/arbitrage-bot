@@ -17,6 +17,7 @@ import { ServerErrorResponse } from "@grpc/grpc-js";
 import { GrpcResult, ensureError, Ok, Err, getPriceKey } from "../../common";
 import { Status } from "@grpc/grpc-js/build/src/constants";
 import { setCache, getCache } from "../../common";
+import { Mutex } from "async-mutex";
 
 const SLIPPAGE = Percentage.fromFraction(1, 100);
 
@@ -25,6 +26,7 @@ export class WhirlpoolService {
   private client: WhirlpoolClient;
   private configPubkey: PublicKey;
   private whirlpoolCache = new Map<string, Whirlpool>();
+  private mutexes = new Map<string, Mutex>();
 
   constructor() {
     const wallets = loadWallets();
@@ -86,12 +88,22 @@ export class WhirlpoolService {
     tokenA: string,
     tokenB: string
   ): Promise<GrpcResult<GetPriceResponse__Output, ServerErrorResponse>> {
+    const priceKey = getPriceKey(this.name, tokenA, tokenB);
+    let mutex = this.mutexes.get(priceKey);
+
+    if (!mutex) {
+      mutex = new Mutex();
+      this.mutexes.set(priceKey, mutex);
+    }
+    const release = await mutex.acquire();
+
     try {
-      const priceKey = getPriceKey(this.name, tokenA, tokenB);
       const cachedPrice = getCache(priceKey);
       if (cachedPrice !== undefined && typeof cachedPrice === "number") {
         return Ok({ price: cachedPrice });
       }
+
+      console.log("Getting price");
 
       const whirlpool = await this.getWhirlpool(tokenA, tokenB);
       const { input, output } = getSwapToken(whirlpool, tokenA);
@@ -119,8 +131,9 @@ export class WhirlpoolService {
       });
     } catch (e) {
       const error = ensureError(e);
-
       return Err(error, Status.INTERNAL);
+    } finally {
+      release();
     }
   }
 }

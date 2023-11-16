@@ -1,5 +1,5 @@
 import * as grpc from "@grpc/grpc-js";
-import { getWhirlpoolService } from "./grpc/whirlpool";
+import { getWhirlpoolService } from "./grpc/whirlpool-service";
 import { PORT } from "./common";
 
 export function startGrpcServer(port: number) {
