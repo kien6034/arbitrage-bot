@@ -25,4 +25,14 @@ Since `node-server` microservice are expected to fails sometimes, because of RPC
 
 ## Caching
 
+In this model, the `node-server` service needs to cache the `price` that according to a pair, using `application level caching`. We determine a `trading opportunity` inside a small `arbitrage_interval`, so it's expire time should be small.
+
+Every `arbitrage_interval`, `core` service will call to get direct price data. So the `node-server` basically will fetch the price on each request.
+
+So why do we need `caching`? We want our `node-sever` only get price data on each `arbitrage_interval`. Says if there are many requests within an `arbitrage_interval`, we want the price to be fetched only one.
+
+## Concurrency
+
+When multiple request of getting price hit the `node-server`, apply the `mutex` locking to prevent multiple fetching price at the same time.
+
 ## Logging

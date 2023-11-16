@@ -2,7 +2,7 @@ import * as grpc from "@grpc/grpc-js";
 import { ProtoService, loadProto } from "../common";
 import { ProtoGrpcType as WhirlpoolProtoGrpcType } from "../proto/whirlpool";
 import { WhirlpoolHandlers } from "../proto/whirlpool/Whirlpool";
-import { Whirlpool } from "../services/whirlpool/whirlpool";
+import { WhirlpoolService } from "../services/whirlpool/whirlpool";
 
 export const getWhirlpoolService = () => {
   const whirlpoolPackageDef = loadProto(ProtoService.Whirlpool);
@@ -11,7 +11,7 @@ export const getWhirlpoolService = () => {
   ) as unknown as WhirlpoolProtoGrpcType;
   const whirlpoolPackage = whirlpoolGrpcObj.whirlpool;
 
-  const whirlpool = new Whirlpool();
+  const whirlpool = new WhirlpoolService();
 
   const handlers: WhirlpoolHandlers = {
     GetPrice: async (req, res) => {
