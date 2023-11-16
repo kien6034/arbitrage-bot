@@ -1,4 +1,4 @@
-import * as NodeCache from "node-cache";
+import NodeCache from "node-cache";
 import { PRICE_CACHE_CHECK_PERIOD, PRICE_CACHE_LIFETIME } from "./config";
 
 const priceCache = new NodeCache({

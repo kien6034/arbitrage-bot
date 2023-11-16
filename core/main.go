@@ -38,7 +38,7 @@ func main() {
 	// Start timing
 	startTime := time.Now()
 
-	r, err := c.GetPrice(ctx, &whirlpool.GetPriceRequest{TokenA: "Afy8qEgeJykFziRwiCk6tnBbd3uzxMoEqn2GTNCyGN7P", TokenB: "So1111111111111111111111111111111111111112"})
+	r, err := c.GetPrice(ctx, &whirlpool.GetPriceRequest{TokenA: "Afy8qEgeJykFziRwiCk6tnBbd3uzxMoEqn2GTNCyGN7P", TokenB: "So11111111111111111111111111111111111111112"})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
