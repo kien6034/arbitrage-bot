@@ -111,6 +111,9 @@ export class WhirlpoolService {
         output.decimals
       );
 
+      // set price to cache
+      setCache(priceKey, price.toNumber());
+
       return Ok({
         price: price.toNumber(),
       });

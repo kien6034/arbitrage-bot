@@ -1,17 +1,17 @@
 import * as NodeCache from "node-cache";
-import { PRICE_CACHE_LIFETIME } from "./config";
+import { PRICE_CACHE_CHECK_PERIOD, PRICE_CACHE_LIFETIME } from "./config";
 
-const serviceCache = new NodeCache({
+const priceCache = new NodeCache({
   stdTTL: PRICE_CACHE_LIFETIME,
-  checkperiod: 600,
+  checkperiod: PRICE_CACHE_CHECK_PERIOD,
 });
 
 function setCache(key: NodeCache.Key, value: any) {
-  serviceCache.set(key, value);
+  priceCache.set(key, value);
 }
 
 function getCache(key: NodeCache.Key): any {
-  return serviceCache.get(key);
+  return priceCache.get(key);
 }
 
 const getPriceKey = (ec: string, tokenA: string, tokenB: string): string => {
@@ -19,6 +19,6 @@ const getPriceKey = (ec: string, tokenA: string, tokenB: string): string => {
 };
 
 function invalidateCache(key: NodeCache.Key) {
-  serviceCache.del(key);
+  priceCache.del(key);
 }
 export { setCache, getCache, invalidateCache, getPriceKey };
