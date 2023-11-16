@@ -1,5 +1,4 @@
 import { PublicKey } from "@solana/web3.js";
-import { loadConfig } from "../provider";
 import { TokenInfo, Whirlpool } from "@renec-foundation/redex-sdk";
 
 export const getSwapToken = (
@@ -14,7 +13,6 @@ export const getSwapToken = (
 
   const inputTokenPubkey = new PublicKey(inputToken);
 
-  let inputTokenInfo: TokenInfo;
   if (tokenAInfo.mint.equals(inputTokenPubkey)) {
     return {
       input: tokenAInfo,
