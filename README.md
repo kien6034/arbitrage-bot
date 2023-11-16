@@ -31,4 +31,8 @@ Every `arbitrage_interval`, `core` service will call to get direct price data. S
 
 So why do we need `caching`? We want our `node-sever` only get price data on each `arbitrage_interval`. Says if there are many requests within an `arbitrage_interval`, we want the price to be fetched only one.
 
+## Concurrency
+
+When multiple request of getting price hit the `node-server`, apply the `mutex` locking to prevent multiple fetching price at the same time.
+
 ## Logging
