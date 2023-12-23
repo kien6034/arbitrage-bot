@@ -1,2 +1,4 @@
 node_modules
 .wallets 
+.env
+.vscode
