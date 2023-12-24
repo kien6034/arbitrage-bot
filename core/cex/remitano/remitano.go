@@ -6,10 +6,13 @@ import (
 	"crypto/sha1"
 	"crypto/sha256"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
 	"time"
+
+	utils "github.com/kien6034/arbitrage-bot/core/utils"
 )
 
 const RemitanoBaseURL = "https://api.remitano.com/api/v1/"
@@ -86,7 +89,7 @@ func ComputeHmacSHA1(secret, data string) string {
 func (r *Remitano) GetBalance(tokens []string) error {
 	response, err := r.DoApiRequest("users/coin_accounts", "GET", "")
 	if err != nil {
-		fmt.Println("erro when do request")
+		fmt.Println("Error when doing request:", err)
 		return err
 	}
 	defer response.Body.Close()
@@ -95,6 +98,20 @@ func (r *Remitano) GetBalance(tokens []string) error {
 		return fmt.Errorf("API request failed with status code: %d", response.StatusCode)
 	}
 
-	fmt.Println(response)
+	// Adjust here: Decode the response body directly into a slice of CoinAccount
+	var accounts []CoinAccount
+	err = json.NewDecoder(response.Body).Decode(&accounts)
+	if err != nil {
+		fmt.Println("Error decoding response body:", err)
+		return err
+	}
+
+	// Process the balances
+	for _, account := range accounts {
+		if utils.Contains(tokens, account.CoinCurrency) {
+			fmt.Printf("Currency: %s, Available: %f, Frozen: %f\n", account.CoinCurrency, account.AvailableBalance, account.FrozenBalance)
+		}
+	}
+
 	return nil
 }
