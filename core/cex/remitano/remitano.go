@@ -1,11 +1,6 @@
 package remitano
 
 import (
-	"crypto/hmac"
-	"crypto/md5"
-	"crypto/sha1"
-	"crypto/sha256"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -16,28 +11,6 @@ import (
 )
 
 const RemitanoBaseURL = "https://api.remitano.com/api/v1/"
-
-func ComputeHmac(secret, method, data string) string {
-	key := []byte(secret)
-	h := hmac.New(sha256.New, key)
-	h.Write([]byte(data))
-	return base64.StdEncoding.EncodeToString(h.Sum(nil))
-}
-
-func getStringData(data string) string {
-	if data == "" {
-		// If data is an empty string, treat it as an empty JSON object to match TypeScript behavior
-		data = "{}"
-	}
-	return data
-}
-
-func ComputeMD5(data string) string {
-	hasher := md5.New()
-	hasher.Write([]byte(getStringData(data)))
-	md5Hash := base64.StdEncoding.EncodeToString(hasher.Sum(nil))
-	return md5Hash
-}
 
 type Remitano struct {
 	AccessKey string
@@ -79,17 +52,9 @@ func (r *Remitano) DoApiRequest(url, method, data string) (*http.Response, error
 	return client.Do(req)
 }
 
-func ComputeHmacSHA1(secret, data string) string {
-	key := []byte(secret)
-	h := hmac.New(sha1.New, key)
-	h.Write([]byte(data))
-	return base64.StdEncoding.EncodeToString(h.Sum(nil))
-}
-
 func (r *Remitano) GetBalance(tokens []string) error {
 	response, err := r.DoApiRequest("users/coin_accounts", "GET", "")
 	if err != nil {
-		fmt.Println("Error when doing request:", err)
 		return err
 	}
 	defer response.Body.Close()
@@ -114,4 +79,48 @@ func (r *Remitano) GetBalance(tokens []string) error {
 	}
 
 	return nil
+}
+
+func (r *Remitano) GetPrice(token0, token1 string) error {
+	//tokenPair := strings.ToUpper(token0) + strings.ToUpper(token1)
+	response, err := r.DoApiRequest("tickers/price", "GET", "")
+
+	if err != nil {
+		return fmt.Errorf("error making API request: %v", err)
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusOK {
+		return fmt.Errorf("API request failed with status code: %d", response.StatusCode)
+	}
+
+	var priceResp PriceRes
+	err = json.NewDecoder(response.Body).Decode(&priceResp)
+	if err != nil {
+		return fmt.Errorf("error decoding response body: %v", err)
+	}
+
+	fmt.Println(priceResp)
+
+	return nil
+}
+
+func (r *Remitano) GetCurrenciesInfo() (CurrenciesInfo, error) {
+	response, err := r.DoApiRequest("currencies/info", "GET", "")
+	if err != nil {
+		return nil, fmt.Errorf("error making API request: %v", err)
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("API request failed with status code: %d", response.StatusCode)
+	}
+
+	var currenciesInfo CurrenciesInfo
+	err = json.NewDecoder(response.Body).Decode(&currenciesInfo)
+	if err != nil {
+		return nil, fmt.Errorf("error decoding response body: %v", err)
+	}
+
+	return currenciesInfo, nil
 }

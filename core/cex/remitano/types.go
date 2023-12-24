@@ -10,3 +10,30 @@ type CoinAccount struct {
 type BalanceResponse struct {
 	Data []CoinAccount `json:"data"`
 }
+
+type PriceRes struct {
+	Ask float64 `json:"ask"`
+	Bid float64 `json:"bid"`
+}
+
+type CurrencyDetail struct {
+	ID        string  `json:"id"`
+	Code      string  `json:"code"`
+	Name      string  `json:"name"`
+	Active    bool    `json:"active"`
+	Type      string  `json:"type"`
+	Fee       float64 `json:"fee"`
+	Precision int     `json:"precision"`
+	// Limits    struct {
+	// 	Amount struct {
+	// 		Min string `json:"min"`
+	// 		Max string `json:"max"`
+	// 	} `json:"amount"`
+	// 	Withdraw struct {
+	// 		Min string `json:"min"`
+	// 		Max string `json:"max"`
+	// 	} `json:"withdraw"`
+	// } `json:"limits"`
+}
+
+type CurrenciesInfo map[string]CurrencyDetail

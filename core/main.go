@@ -29,6 +29,17 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	err = rm.GetPrice("renec", "reusd")
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = rm.GetCurrenciesInfo()
+	if err != nil {
+		panic(err)
+	}
+
 }
 
 func makeRequest(client whirlpool.WhirlpoolClient, tokenA, tokenB string, respChan chan<- *whirlpool.GetPriceResponse, errChan chan<- error) {
