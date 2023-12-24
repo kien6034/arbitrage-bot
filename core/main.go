@@ -25,21 +25,12 @@ func main() {
 	secretKey := os.Getenv("SECRET_KEY")
 
 	rm := remitano.NewRemitano(accessKey, secretKey)
-	err := rm.GetBalance([]string{"renec", "usdt"})
+
+	err := rm.GetPrice("renec", "usdt")
+
 	if err != nil {
 		panic(err)
 	}
-
-	err = rm.GetPrice("renec", "reusd")
-	if err != nil {
-		panic(err)
-	}
-
-	_, err = rm.GetCurrenciesInfo()
-	if err != nil {
-		panic(err)
-	}
-
 }
 
 func makeRequest(client whirlpool.WhirlpoolClient, tokenA, tokenB string, respChan chan<- *whirlpool.GetPriceResponse, errChan chan<- error) {

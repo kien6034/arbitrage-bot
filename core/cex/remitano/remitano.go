@@ -82,7 +82,7 @@ func (r *Remitano) GetBalance(tokens []string) error {
 }
 
 func (r *Remitano) GetPrice(token0, token1 string) error {
-	//tokenPair := strings.ToUpper(token0) + strings.ToUpper(token1)
+	tokenPair := strings.ToUpper(token0) + strings.ToUpper(token1)
 	response, err := r.DoApiRequest("tickers/price", "GET", "")
 
 	if err != nil {
@@ -94,14 +94,18 @@ func (r *Remitano) GetPrice(token0, token1 string) error {
 		return fmt.Errorf("API request failed with status code: %d", response.StatusCode)
 	}
 
-	var priceResp PriceRes
+	var priceResp PriceResponse
 	err = json.NewDecoder(response.Body).Decode(&priceResp)
 	if err != nil {
 		return fmt.Errorf("error decoding response body: %v", err)
 	}
 
-	fmt.Println(priceResp)
+	priceDetail, ok := priceResp[tokenPair]
+	if !ok {
+		return fmt.Errorf("price for token pair %s not found", tokenPair)
+	}
 
+	fmt.Printf("Bid: %f, Ask: %f\n", priceDetail.Bid, priceDetail.Ask)
 	return nil
 }
 

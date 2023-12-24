@@ -11,11 +11,12 @@ type BalanceResponse struct {
 	Data []CoinAccount `json:"data"`
 }
 
-type PriceRes struct {
-	Ask float64 `json:"ask"`
+type PriceDetail struct {
 	Bid float64 `json:"bid"`
+	Ask float64 `json:"ask"`
 }
 
+type PriceResponse map[string]PriceDetail
 type CurrencyDetail struct {
 	ID        string  `json:"id"`
 	Code      string  `json:"code"`
